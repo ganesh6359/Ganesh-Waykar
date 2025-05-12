@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Video Editor Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #121212;
+    color: #eee;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 1rem 3rem;
+  }
+  h1, h2, h3 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #00bcd4;
+  }
+  p {
+    margin-bottom: 1rem;
+    color: #ccc;
+  }
+
+  header {
+    width: 100%;
+    max-width: 360px;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #00bcd4;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  main {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  /* About */
+  section#about {
+    background: #1c1c1c;
+    border-radius: 8px;
+    padding: 1rem 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 12px rgba(0,188,212,0.4);
+  }
+
+  /* Portfolio */
+  section#portfolio {
+    margin-bottom: 1.5rem;
+  }
+
+  #drop-area {
+    border: 2px dashed #00bcd4;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    color: #00bcd4;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  #drop-area.highlight {
+    background-color: rgba(0, 188, 212, 0.2);
+  }
+  #drop-area p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+  }
+  #fileElem {
+    display: none;
+  }
+
+  #portfolio .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(120px,1fr));
+    gap: 0.8rem;
+  }
+  .video-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(0,188,212,0.3);
+    cursor: pointer;
+    background-color: #222;
+    transition: transform 0.3s ease;
+  }
+  .video-item:hover {
+    transform: scale(1.05);
+  }
+  .video-item video {
+    display: block;
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px;
+  }
+  .video-title {
+    color: #00bcd4;
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.3rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Contact */
+  section#contact {
+    background: #1c1c1c;
+    padding: 1rem 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0,188,212,0.4);
+    text-align: center;
+  }
+  #contact a, #contact a:visited {
+    color: #00bcd4;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  #contact a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive text scaling */
+  @media (max-width: 360px) {
+    body {
+      padding: 0.5rem 0.5rem 2rem;
+    }
+    header, main {
+      max-width: 100%;
+    }
+    .video-title {
+      font-size: 0.7rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Your Name</h1>
+    <p>Creative Video Editor & Storyteller</p>
+  </header>
+
+  <main>
+    <section id="about">
+      <h2>About Me</h2>
+      <p>Hello! I am a passionate video editor with experience crafting engaging stories through visual media. I specialize in editing for YouTube, commercials, and short films, bringing your ideas to life with professionalism and creativity.</p>
+    </section>
+
+    <section id="portfolio">
+      <h2>My Portfolio</h2>
+
+      <div id="drop-area" tabindex="0" aria-label="Drag and drop videos here or click to select files">
+        <p>Drag & drop your video files here</p>
+        <p>or</p>
+        <button id="fileSelectBtn" aria-label="Select video files">Select Videos</button>
+        <input type="file" id="fileElem" multiple accept="video/*" />
+      </div>
+
+      <div class="video-grid" id="videoGrid" aria-live="polite" aria-atomic="true" aria-relevant="additions"></div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Me</h2>
+      <p>Interested in working together or have questions? Feel free to reach out!</p>
+      <p>
+        <a href="mailto:your.email@example.com" aria-label="Send email">✉️ your.email@example.com</a>
+      </p>
+      <p>
+        <a href="https://www.linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">🔗 LinkedIn</a>
+      </p>
+      <p>
+        <a href="https://www.instagram.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Instagram profile">📸 Instagram</a>
+      </p>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      var dropArea = document.getElementById('drop-area');
+      var fileInput = document.getElementById('fileElem');
+      var fileSelectBtn = document.getElementById('fileSelectBtn');
+      var videoGrid = document.getElementById('videoGrid');
+
+      // Prevent default behaviors
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      // Highlight drop area
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
+
+      function highlight() {
+        dropArea.classList.add('highlight');
+      }
+      function unhighlight() {
+        dropArea.classList.remove('highlight');
+      }
+
+      // Handle dropped files
+      dropArea.addEventListener('drop', handleDrop, false);
+
+      function handleDrop(e) {
+        var dt = e.dataTransfer;
+        var files = dt.files;
+        handleFiles(files);
+      }
+
+      // Handle file select button click
+      fileSelectBtn.addEventListener('click', function() {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', function() {
+        handleFiles(fileInput.files);
+      });
+
+      function handleFiles(files) {
+        [...files].forEach(previewFile);
+      }
+
+      function previewFile(file) {
+        if (!file.type.startsWith('video/')) {
+          alert('Only video files are accepted.');
+          return;
+        }
+
+        var videoURL = URL.createObjectURL(file);
+
+        var videoItem = document.createElement('div');
+        videoItem.classList.add('video-item');
+        videoItem.setAttribute('tabindex', '0');
+        videoItem.setAttribute('aria-label', file.name);
+
+        var video = document.createElement('video');
+        video.controls = true;
+        video.preload = 'metadata';
+        video.muted = true;    // mute to allow autoplay if added
+        video.playsInline = true;
+        video.src = videoURL;
+        video.title = file.name;
+        video.style.borderRadius = '8px';
+
+        // Optional: autoplay muted preview for better user experience (can be removed if undesired)
+        // video.autoplay = true;
+
+        var titleDiv = document.createElement('div');
+        titleDiv.className = 'video-title';
+        titleDiv.textContent = file.name;
+
+        videoItem.appendChild(video);
+        videoItem.appendChild(titleDiv);
+        videoGrid.appendChild(videoItem);
+      }
+    })();
+  </script>
+</body>
+</html>
+
